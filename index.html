@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Doux — Postres Artesanales</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Archivo:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --cream:#FBF6EF;
+    --cream-deep:#F3EADF;
+    --pink:#F3D9D6;
+    --pink-soft:#F8E8E6;
+    --taupe:#A9846F;
+    --cocoa:#5C4033;
+    --cocoa-deep:#3E2B22;
+    --gold:#C9A876;
+    --ink:#3A332E;
+    --paper:#FFFFFF;
+    --shadow: 0 18px 40px -20px rgba(60,40,25,0.35);
+  }
+
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--cream);
+    color:var(--ink);
+    font-family:'Archivo', sans-serif;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+
+  .display{
+    font-family:'Fraunces', serif;
+    font-weight:600;
+    text-transform:uppercase;
+    letter-spacing:0.02em;
+    color:var(--taupe);
+  }
+  .script{
+    font-family:'Pacifico', cursive;
+    font-weight:400;
+    color:var(--cocoa);
+    text-transform:none;
+    letter-spacing:0;
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    *{animation-duration:0.01ms !important; transition-duration:0.01ms !important;}
+  }
+
+  /* ---------- Decorative medallion (signature element) ---------- */
+  .medallion-bg{
+    position:absolute;
+    width:220px; height:220px;
+    border-radius:50%;
+    border:1.5px dashed rgba(169,132,111,0.25);
+    pointer-events:none;
+  }
+  .medallion-bg::before{
+    content:"";
+    position:absolute; inset:14px;
+    border-radius:50%;
+    border:1px solid rgba(169,132,111,0.18);
+  }
+
+  /* ---------- Top Nav ---------- */
+  .topnav{
+    position:sticky; top:0; z-index:50;
+    display:flex; align-items:center; justify-content:space-between;
+    padding:14px 6vw;
+    background:rgba(251,246,239,0.88);
+    backdrop-filter:blur(10px);
+    border-bottom:1px solid rgba(169,132,111,0.18);
+  }
+  .topnav .brand{
+    display:flex; align-items:center; gap:10px;
+  }
+  .topnav .brand img{
+    width:42px; height:42px; border-radius:50%;
+    box-shadow:0 2px 8px rgba(60,40,25,0.25);
+  }
+  .topnav .brand span{
+    font-family:'Fraunces', serif; font-weight:600;
+    letter-spacing:0.12em; font-size:1.1rem; color:var(--cocoa);
+  }
+  .topnav nav{
+    display:flex; gap:26px;
+  }
+  .topnav nav a{
+    color:var(--cocoa);
+    text-decoration:none;
+    font-size:0.82rem;
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+    font-weight:600;
+    opacity:0.75;
+    transition:opacity 0.25s ease, color 0.25s ease;
+    position:relative;
+  }
+  .topnav nav a:hover{ opacity:1; }
+  .topnav nav a:focus-visible{ outline:2px solid var(--taupe); outline-offset:4px; border-radius:3px; }
+  @media (max-width:720px){
+    .topnav nav{ display:none; }
+  }
+
+  /* ---------- Hero ---------- */
+  .hero{
+    position:relative;
+    padding:90px 6vw 70px;
+    text-align:center;
+    overflow:hidden;
+    background:
+      radial-gradient(circle at 12% 18%, rgba(243,217,214,0.55), transparent 45%),
+      radial-gradient(circle at 88% 75%, rgba(201,168,118,0.18), transparent 50%),
+      var(--cream);
+  }
+  .hero .medallion-bg.m1{ top:6%; left:4%; }
+  .hero .medallion-bg.m2{ bottom:0%; right:6%; width:160px; height:160px; }
+
+  .hero-eyebrow{
+    font-size:0.78rem;
+    letter-spacing:0.32em;
+    text-transform:uppercase;
+    color:var(--taupe);
+    margin-bottom:22px;
+    font-weight:600;
+    opacity:0;
+    animation: fadeUp 0.9s ease 0.1s forwards;
+  }
+  .hero-logo{
+    width:128px; height:128px;
+    margin:0 auto 28px;
+    border-radius:50%;
+    box-shadow:var(--shadow);
+    opacity:0;
+    animation: fadeUp 0.9s ease 0.25s forwards;
+  }
+  .hero h1{
+    margin:0;
+    font-size:clamp(2.6rem, 8vw, 5.2rem);
+    line-height:0.95;
+    opacity:0;
+    animation: fadeUp 0.9s ease 0.4s forwards;
+  }
+  .hero h1 .script{
+    display:block;
+    font-size:1.5em;
+    margin-top:-0.06em;
+    padding-bottom:0.22em;
+  }
+  .hero-tagline{
+    margin:44px auto 0;
+    max-width:480px;
+    font-size:1.05rem;
+    color:var(--cocoa);
+    opacity:0;
+    animation: fadeUp 0.9s ease 0.55s forwards;
+  }
+  .hero-cta{
+    margin-top:36px;
+    display:inline-flex; gap:16px; flex-wrap:wrap; justify-content:center;
+    opacity:0;
+    animation: fadeUp 0.9s ease 0.7s forwards;
+  }
+  .btn{
+    display:inline-block;
+    padding:13px 30px;
+    border-radius:999px;
+    font-size:0.85rem;
+    letter-spacing:0.06em;
+    text-transform:uppercase;
+    font-weight:700;
+    text-decoration:none;
+    transition:transform 0.25s ease, box-shadow 0.25s ease;
+  }
+  .btn:focus-visible{ outline:2px solid var(--cocoa); outline-offset:3px; }
+  .btn-primary{
+    background:var(--cocoa);
+    color:var(--cream);
+    box-shadow:0 10px 24px -10px rgba(60,40,25,0.55);
+  }
+  .btn-primary:hover{ transform:translateY(-2px); box-shadow:0 14px 28px -10px rgba(60,40,25,0.6); }
+  .btn-ghost{
+    background:transparent;
+    border:1.5px solid var(--taupe);
+    color:var(--cocoa);
+  }
+  .btn-ghost:hover{ background:rgba(169,132,111,0.1); transform:translateY(-2px); }
+
+  @keyframes fadeUp{
+    from{ opacity:0; transform:translateY(16px); }
+    to{ opacity:1; transform:translateY(0); }
+  }
+
+  /* ---------- Section shells ---------- */
+  .section{
+    position:relative;
+    padding:100px 6vw;
+  }
+  .section-alt{
+    background:var(--paper);
+  }
+  .section-deep{
+    background:var(--cocoa);
+    color:var(--cream);
+  }
+  .section-pink{
+    background:linear-gradient(180deg, var(--pink-soft), var(--cream));
+  }
+
+  .section-head{
+    text-align:center;
+    margin-bottom:64px;
+    position:relative;
+  }
+  .section-head .eyebrow{
+    font-size:0.76rem;
+    letter-spacing:0.3em;
+    text-transform:uppercase;
+    color:var(--taupe);
+    font-weight:700;
+    margin-bottom:10px;
+  }
+  .section-head h2{
+    margin:0;
+    font-size:clamp(2.1rem, 5vw, 3.4rem);
+    line-height:0.9;
+  }
+  .section-head h2 .script{
+    display:block;
+    font-size:1.4em;
+    margin-top:-0.05em;
+  }
+  .section-head h2 .connector{
+    display:block;
+    font-family:'Fraunces', serif;
+    font-style:italic;
+    font-weight:500;
+    text-transform:lowercase;
+    letter-spacing:0.01em;
+    font-size:0.4em;
+    color:var(--taupe);
+    opacity:0.8;
+    margin:0.15em 0;
+  }
+  .section-head h2 .connector::before,
+  .section-head h2 .connector::after{
+    content:"—";
+    margin:0 12px;
+    opacity:0.55;
+    font-style:normal;
+  }
+  .section-deep .section-head h2 .connector{ color:var(--gold); }
+  .section-deep .section-head .eyebrow{ color:var(--gold); }
+  .section-deep .section-head h2{ color:var(--pink-soft); }
+  .section-deep .section-head h2 .script{ color:var(--cream); }
+
+  /* ---------- Product cards ---------- */
+  .grid{
+    display:grid;
+    gap:34px;
+    max-width:1080px;
+    margin:0 auto;
+  }
+  .grid-3{ grid-template-columns:repeat(3, 1fr); }
+  .grid-2{ grid-template-columns:repeat(2, 1fr); }
+  @media (max-width:880px){
+    .grid-3, .grid-2{ grid-template-columns:1fr; max-width:520px; }
+  }
+
+  .card{
+    background:var(--paper);
+    border-radius:22px;
+    overflow:hidden;
+    box-shadow:0 14px 34px -22px rgba(60,40,25,0.4);
+    transition:transform 0.35s ease, box-shadow 0.35s ease;
+    display:flex; flex-direction:column;
+  }
+  .card:hover{
+    transform:translateY(-6px);
+    box-shadow:0 22px 44px -22px rgba(60,40,25,0.5);
+  }
+  .card-media{
+    aspect-ratio:4/3;
+    background:var(--pink-soft);
+    display:flex; align-items:center; justify-content:center;
+    overflow:hidden;
+    position:relative;
+  }
+  .card-media svg{ width:100%; height:100%; }
+  .card-media img{
+    width:100%; height:100%;
+    object-fit:cover;
+    object-position:center;
+    display:block;
+    transition:transform 0.5s ease;
+  }
+  .card:hover .card-media img{ transform:scale(1.04); }
+  .card-body{
+    padding:26px 26px 24px;
+    flex:1;
+    display:flex; flex-direction:column;
+  }
+  .card-body h3{
+    font-family:'Fraunces', serif;
+    font-weight:600;
+    font-size:1.08rem;
+    letter-spacing:0.04em;
+    text-transform:uppercase;
+    color:var(--cocoa-deep);
+    margin:0 0 10px;
+  }
+  .card-body p{
+    font-size:0.92rem;
+    line-height:1.55;
+    color:#6b5d52;
+    margin:0 0 20px;
+    flex:1;
+  }
+  .price-row{
+    display:flex; justify-content:space-between; align-items:baseline;
+    border-top:1px dashed rgba(169,132,111,0.35);
+    padding-top:14px;
+    font-size:0.88rem;
+  }
+  .price-row + .price-row{ margin-top:8px; border-top:none; padding-top:0; }
+  .price-row .label{ color:#8a7a6d; font-weight:500; }
+  .price-row .amount{ font-weight:700; color:var(--cocoa-deep); font-size:1.02rem; }
+  .price-row .amount.bulk{ color:var(--taupe); font-size:0.95rem; }
+  .price-block{ margin-top:auto; }
+  .price-sub{
+    font-size:0.7rem;
+    text-transform:uppercase;
+    letter-spacing:0.08em;
+    color:#a89a8d;
+    margin-bottom:2px;
+  }
+
+  /* size variant rows (tiramisu / cheesecake) */
+  .size-table{ width:100%; border-collapse:collapse; font-size:0.88rem; margin-top:auto; }
+  .size-table th{
+    text-align:right; font-weight:600; color:#a89a8d;
+    font-size:0.68rem; letter-spacing:0.08em; text-transform:uppercase;
+    padding-bottom:8px;
+  }
+  .size-table th:first-child{ text-align:left; }
+  .size-table td{ padding:7px 0; border-top:1px dashed rgba(169,132,111,0.3); }
+  .size-table td:first-child{ font-weight:600; color:var(--cocoa-deep); }
+  .size-table td:not(:first-child){ text-align:right; font-weight:700; color:var(--cocoa-deep); }
+  .size-table td.bulk{ color:var(--taupe); font-weight:600; }
+
+  .note-strip{
+    max-width:760px; margin:54px auto 0;
+    text-align:center;
+    font-size:0.88rem;
+    color:#7a6b5e;
+    font-style:italic;
+    line-height:1.6;
+    padding:22px 28px;
+    border-top:1px solid rgba(169,132,111,0.25);
+    border-bottom:1px solid rgba(169,132,111,0.25);
+  }
+  .section-deep .note-strip{ color:rgba(251,246,239,0.75); border-color:rgba(251,246,239,0.25); }
+
+  /* ---------- Signature collection (alfajores) banner ---------- */
+  .signature-banner{
+    max-width:1080px; margin:0 auto;
+    display:grid; grid-template-columns:1fr 1fr;
+    gap:50px; align-items:center;
+    background:linear-gradient(135deg, rgba(243,217,214,0.5), rgba(251,246,239,0.2));
+    border-radius:28px;
+    padding:50px;
+    box-shadow:var(--shadow);
+  }
+  @media (max-width:820px){
+    .signature-banner{ grid-template-columns:1fr; padding:34px; }
+  }
+  .signature-banner h3{
+    font-family:'Fraunces', serif; font-weight:600; text-transform:uppercase;
+    letter-spacing:0.05em; color:var(--cocoa-deep); font-size:1.3rem; margin:0 0 14px;
+  }
+  .signature-banner p{ color:#6b5d52; line-height:1.7; margin:0 0 22px; }
+  .signature-banner .price-row{ max-width:320px; }
+  .signature-banner-reverse .card-media{ order:2; }
+  @media (max-width:820px){
+    .signature-banner-reverse .card-media{ order:0; }
+  }
+
+  /* ---------- Story / quote section ---------- */
+  .story{
+    max-width:760px; margin:0 auto; text-align:center;
+  }
+  .story blockquote{
+    font-family:'Fraunces', serif;
+    font-style:italic;
+    font-size:clamp(1.2rem, 2.4vw, 1.6rem);
+    line-height:1.6;
+    color:var(--cream);
+    margin:0 0 34px;
+  }
+  .story .signoff{
+    font-size:0.85rem;
+    letter-spacing:0.1em;
+    text-transform:uppercase;
+    color:var(--gold);
+    font-weight:600;
+  }
+
+  /* ---------- Footer / contact ---------- */
+  .footer{
+    background:var(--cocoa-deep);
+    color:rgba(251,246,239,0.85);
+    padding:70px 6vw 36px;
+    text-align:center;
+  }
+  .footer img{
+    width:84px; height:84px; border-radius:50%;
+    margin-bottom:22px;
+    box-shadow:0 10px 24px -8px rgba(0,0,0,0.5);
+  }
+  .footer h4{
+    font-family:'Fraunces', serif; text-transform:uppercase;
+    letter-spacing:0.08em; color:var(--pink-soft); font-size:1.4rem; margin:0 0 8px;
+  }
+  .footer .script{ color:var(--gold); }
+  .footer .contact-line{
+    margin:26px 0 6px;
+    font-size:1.05rem;
+    font-weight:600;
+    letter-spacing:0.03em;
+  }
+  .footer .contact-line a{ color:var(--cream); text-decoration:none; border-bottom:1px solid rgba(251,246,239,0.3); }
+  .footer .contact-line a:hover{ border-color:var(--cream); }
+  .footer-links{
+    display:flex; gap:14px; flex-wrap:wrap; justify-content:center;
+    margin:24px 0 30px;
+  }
+  .footer-link{
+    display:inline-flex; align-items:center; gap:8px;
+    padding:11px 22px;
+    border-radius:999px;
+    border:1.5px solid rgba(251,246,239,0.35);
+    color:var(--cream);
+    text-decoration:none;
+    font-size:0.82rem;
+    font-weight:700;
+    letter-spacing:0.04em;
+    text-transform:uppercase;
+    transition:transform 0.25s ease, background 0.25s ease, border-color 0.25s ease;
+  }
+  .footer-link:hover{
+    background:rgba(251,246,239,0.1);
+    border-color:var(--gold);
+    transform:translateY(-2px);
+  }
+  .footer .fine{
+    font-size:0.75rem;
+    color:rgba(251,246,239,0.45);
+    margin-top:30px;
+    letter-spacing:0.03em;
+  }
+
+  /* reveal-on-scroll */
+  .reveal{
+    opacity:0; transform:translateY(22px);
+    transition:opacity 0.7s ease, transform 0.7s ease;
+  }
+  .reveal.in{ opacity:1; transform:translateY(0); }
+
+</style>
+</head>
+<body>
+
+<header class="topnav">
+  <div class="brand">
+    <img src="logo-doux.png" alt="Logo Doux">
+    <span>DOUX</span>
+  </div>
+  <nav aria-label="Navegación principal">
+    <a href="#tartaletas">Tartaletas</a>
+    <a href="#compartir">Para compartir</a>
+    <a href="#signature">Signature</a>
+    <a href="#equilibrio">Equilibrio</a>
+    <a href="#contacto">Pedidos</a>
+  </nav>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+  <span class="medallion-bg m1" aria-hidden="true"></span>
+  <span class="medallion-bg m2" aria-hidden="true"></span>
+  <p class="hero-eyebrow">Postres artesanales · Quito, Ecuador</p>
+  <img class="hero-logo" src="logo-doux.png" alt="Doux, donde lo dulce se convierte en magia">
+  <h1 class="display">Catálogo<span class="script">postres</span></h1>
+  <p class="hero-tagline">Cada creación es artesanal y preparada con ingredientes de alta calidad, hecha para regalar un momento de felicidad genuina.</p>
+  <div class="hero-cta">
+    <a class="btn btn-primary" href="#tartaletas">Ver el catálogo</a>
+    <a class="btn btn-ghost" href="#contacto">Hacer un pedido</a>
+  </div>
+</section>
+
+<!-- TARTALETAS -->
+<section id="tartaletas" class="section section-alt">
+  <div class="section-head reveal">
+    <p class="eyebrow">Nuestra selección de</p>
+    <h2 class="display">Tartaletas<span class="connector">de</span><span class="script">sabores</span></h2>
+  </div>
+
+  <div class="grid grid-3">
+
+    <article class="card reveal">
+      <div class="card-media">
+        <img src="tartaleta-limon.jpg" alt="Tartaleta de limón con merengue italiano flameado">
+      </div>
+      <div class="card-body">
+        <h3>Tartaleta de limón</h3>
+        <p>Crema cítrica refrescante sobre base crocante, coronada con merengue italiano flameado.</p>
+        <div class="price-block">
+          <div class="price-row"><span class="label">1 unidad</span><span class="amount">$2,50</span></div>
+          <div class="price-row"><span class="label">Precio por mayor</span><span class="amount bulk">$2,20</span></div>
+        </div>
+      </div>
+    </article>
+
+    <article class="card reveal">
+      <div class="card-media">
+        <img src="tartaleta-mora.jpg" alt="Tartaleta de mora con frutos rojos">
+      </div>
+      <div class="card-body">
+        <h3>Tartaleta de mora</h3>
+        <p>Delicada base de galleta rellena de moras frescas de temporada, decorada con frutos rojos.</p>
+        <div class="price-block">
+          <div class="price-row"><span class="label">1 unidad</span><span class="amount">$2,50</span></div>
+          <div class="price-row"><span class="label">Precio por mayor</span><span class="amount bulk">$2,20</span></div>
+        </div>
+      </div>
+    </article>
+
+    <article class="card reveal">
+      <div class="card-media">
+        <img src="tartaleta-maracuya.jpg" alt="Tartaleta de maracuyá con merengue italiano">
+      </div>
+      <div class="card-body">
+        <h3>Tartaleta de maracuyá</h3>
+        <p>Suave mousse de fruta de la pasión con el toque justo de acidez y un decorado delicado.</p>
+        <div class="price-block">
+          <div class="price-row"><span class="label">1 unidad</span><span class="amount">$2,50</span></div>
+          <div class="price-row"><span class="label">Precio por mayor</span><span class="amount bulk">$2,20</span></div>
+        </div>
+      </div>
+    </article>
+
+  </div>
+
+  <p class="note-strip reveal">Nuestras tartaletas se entregan en empaques individuales para facilitar su transporte y asegurar una higiene óptima. Precio por mayor disponible a partir de 6 unidades.</p>
+</section>
+
+<!-- MOMENTOS PARA COMPARTIR -->
+<section id="compartir" class="section section-pink">
+  <div class="section-head reveal">
+    <p class="eyebrow">Creaciones ideales para</p>
+    <h2 class="display">Momentos<span class="connector">para</span><span class="script">compartir</span></h2>
+  </div>
+
+  <div class="grid grid-3">
+
+    <article class="card reveal">
+      <div class="card-media">
+        <img src="tiramisu.jpg" alt="Tiramisú con virutas de chocolate">
+      </div>
+      <div class="card-body">
+        <h3>Tiramisú</h3>
+        <p>Capas de bizcotelas infusionadas en esencia de café, con crema mascarpone y virutas de chocolate.</p>
+        <table class="size-table">
+          <tr><th></th><th>Unidad</th><th>Por mayor</th></tr>
+          <tr><td>Pequeño</td><td>$2,00</td><td class="bulk">$1,75</td></tr>
+          <tr><td>Mediano</td><td>$3,50</td><td class="bulk">$2,75</td></tr>
+        </table>
+      </div>
+    </article>
+
+    <article class="card reveal">
+      <div class="card-media">
+        <img src="galletas-chocolate.jpg" alt="Galletas artesanales con chispas de chocolate">
+      </div>
+      <div class="card-body">
+        <h3>Galletas con chispas de chocolate</h3>
+        <p>Galletas artesanales con trozos de chocolate, crujientes por fuera y suaves por dentro.</p>
+        <div class="price-block">
+          <div class="price-row"><span class="label">1 unidad</span><span class="amount">$0,60</span></div>
+          <div class="price-row"><span class="label">Por mayor</span><span class="amount bulk">$0,45</span></div>
+          <div class="price-row"><span class="label">Paquete x 2</span><span class="amount">$1,00</span></div>
+          <div class="price-row"><span class="label">Por mayor</span><span class="amount bulk">$0,85</span></div>
+        </div>
+      </div>
+    </article>
+
+    <article class="card reveal">
+      <div class="card-media">
+        <img src="cheesecake-maracuya.jpg" alt="Cheesecake de maracuyá">
+      </div>
+      <div class="card-body">
+        <h3>Cheesecake de maracuyá</h3>
+        <p>Pastel de queso cremoso sobre base de galleta artesanal, con cobertura de maracuyá 100% natural.</p>
+        <table class="size-table">
+          <tr><th></th><th>Unidad</th><th>Por mayor</th></tr>
+          <tr><td>Pequeño</td><td>$2,25</td><td class="bulk">$2,00</td></tr>
+          <tr><td>Mediano</td><td>$2,75</td><td class="bulk">$2,25</td></tr>
+        </table>
+      </div>
+    </article>
+
+  </div>
+
+  <p class="note-strip reveal">Para pedidos de volumen: a partir de 12 unidades en nuestra selección de galletas artesanales y desde 3 unidades en nuestras tartas individuales (Tiramisú, Cheesecake y Mini Donas).</p>
+</section>
+
+<!-- COLECCIÓN SIGNATURE -->
+<section id="signature" class="section section-alt">
+  <div class="section-head reveal">
+    <p class="eyebrow">Piezas exclusivas</p>
+    <h2 class="display">Colección<span class="script">Signature</span></h2>
+  </div>
+
+  <div class="signature-banner reveal">
+    <div class="card-media" style="border-radius:18px; aspect-ratio:4/3;">
+      <img src="alfajores.jpg" alt="Alfajores artesanales rellenos de dulce de leche">
+    </div>
+    <div>
+      <h3>Alfajores</h3>
+      <p>Delicadas tapas de masa quebrada artesanal, unidas por un generoso corazón de dulce de leche premium. Finalizado con un sutil velo de azúcar impalpable: un clásico que se derrite en cada bocado.</p>
+      <div class="price-row"><span class="label">Caja x 3 unidades</span><span class="amount">$1,00</span></div>
+      <div class="price-row"><span class="label">Precio por mayor (x caja)</span><span class="amount bulk">$0,85</span></div>
+    </div>
+  </div>
+
+  <div class="signature-banner signature-banner-reverse reveal" style="margin-top:40px;">
+    <div class="card-media" style="border-radius:18px; aspect-ratio:4/3;">
+      <img src="mini-donas-chocolate.jpg" alt="Mini donas bañadas en chocolate brillante con chispas de colores">
+    </div>
+    <div>
+      <h3>Mini Donas de Chocolate</h3>
+      <p>Deliciosas mini donas ultra esponjosas, bañadas en chocolate brillante y cubiertas con divertidas chispas de colores.</p>
+      <div class="price-row"><span class="label">Vaso (5 unidades)</span><span class="amount">$2,00</span></div>
+      <div class="price-row"><span class="label">Precio por mayor</span><span class="amount bulk">$1,75</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- DULCE EQUILIBRIO -->
+<section id="equilibrio" class="section section-pink">
+  <div class="section-head reveal">
+    <p class="eyebrow">Opciones conscientes</p>
+    <h2 class="display">Dulce<span class="script">equilibrio</span></h2>
+  </div>
+
+  <div class="grid grid-2">
+
+    <article class="card reveal">
+      <div class="card-media">
+        <img src="muffin-manzana.jpg" alt="Muffin de manzana con canela">
+      </div>
+      <div class="card-body">
+        <h3>Muffin de manzana</h3>
+        <p>Artesanal, ligero y reducido en azúcar, con trozos de manzana fresca y un suave toque de canela. Esponjoso y húmedo.</p>
+        <div class="price-block">
+          <div class="price-row"><span class="label">1 unidad</span><span class="amount">$1,25</span></div>
+          <div class="price-row"><span class="label">Precio por mayor</span><span class="amount bulk">$1,00</span></div>
+        </div>
+      </div>
+    </article>
+
+    <article class="card reveal">
+      <div class="card-media">
+        <img src="bizcocho-platano.jpg" alt="Bizcocho de plátano con chocolate 70% cacao">
+      </div>
+      <div class="card-body">
+        <h3>Bizcocho de plátano</h3>
+        <p>Textura artesanal húmeda, 0% azúcar añadida (dulzor natural del plátano), decorado con chocolate 70% cacao fundido.</p>
+        <div class="price-block">
+          <div class="price-row"><span class="label">1 unidad</span><span class="amount">$1,75</span></div>
+          <div class="price-row"><span class="label">Precio por mayor</span><span class="amount bulk">$1,25</span></div>
+        </div>
+      </div>
+    </article>
+
+  </div>
+
+  <p class="note-strip reveal">Si entrenas, compites o simplemente cuidas tu alimentación, nuestras opciones saludables son una alternativa ideal para recargar energía y seguir dando lo mejor de ti.</p>
+</section>
+
+<!-- HISTORIA / QUOTE -->
+<section class="section section-deep">
+  <span class="medallion-bg" style="top:8%; right:8%; border-color:rgba(251,246,239,0.15);" aria-hidden="true"></span>
+  <div class="section-head reveal">
+    <p class="eyebrow">El corazón de nuestra</p>
+    <h2 class="display">Repostería</h2>
+  </div>
+  <div class="story reveal">
+    <blockquote>"Creemos que la verdadera magia ocurre cuando se combinan los mejores ingredientes de nuestro querido Ecuador con la paciencia de las manos artesanales. Cada postre que llega a sus manos es fruto de nuestra pasión por la calidad y el deseo de regalarle un momento de felicidad genuina. Gracias por valorar el arte de lo hecho con amor."</blockquote>
+    <p class="signoff">— Doux, postres artesanales</p>
+  </div>
+</section>
+
+<!-- FOOTER / CONTACTO -->
+<footer id="contacto" class="footer">
+  <img src="logo-doux.png" alt="Logo Doux">
+  <h4>Doux<span class="script" style="display:block; font-size:1.3rem; margin-top:4px;">donde lo dulce se convierte en magia</span></h4>
+  <p class="contact-line">Pedidos: <a href="tel:+593964189973">0964 189 973</a></p>
+  <div class="footer-links">
+    <a class="footer-link" href="https://wa.me/593964189973" target="_blank" rel="noopener noreferrer">
+      WhatsApp
+    </a>
+    <a class="footer-link" href="https://instagram.com/uio_doux" target="_blank" rel="noopener noreferrer">
+      Instagram · @uio_doux
+    </a>
+  </div>
+  <p class="fine">Doux · Postres artesanales · Quito, Ecuador</p>
+</footer>
+
+<script>
+  // Scroll reveal
+  const reveals = document.querySelectorAll('.reveal');
+  const io = new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{
+      if(e.isIntersecting){
+        e.target.classList.add('in');
+        io.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.15 });
+  reveals.forEach(el=>io.observe(el));
+</script>
+
+</body>
+</html>
